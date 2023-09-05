@@ -2,7 +2,6 @@ package router
 
 import (
 	"go-rest-api/controller"
-	"net/http"
 	"os"
 
 	"github.com/labstack/echo/v4"
@@ -18,15 +17,15 @@ func NewRouter(ac controller.IArticleInterface) *echo.Echo {
 		AllowMethods:     []string{echo.GET, echo.POST, echo.PUT, echo.DELETE},
 		AllowCredentials: true,
 	}))
-	e.Use(middleware.CSRFWithConfig(middleware.CSRFConfig{
-		CookiePath:     "/",
-		CookieDomain:   os.Getenv("API_DOMAIN"),
-		CookieHTTPOnly: true,
-		// When you are using localhost, you should set SameSiteDefaultMode.
-		CookieSameSite: http.SameSiteDefaultMode,
-		// When you are using production, you should set SameSiteNoneMode.
-		// CookieSameSite: http.SameSiteNoneMode,
-	}))
+	// e.Use(middleware.CSRFWithConfig(middleware.CSRFConfig{
+	// 	CookiePath: "/",
+	// 	CookieDomain:   os.Getenv("API_DOMAIN"),
+	// 	CookieHTTPOnly: true,
+	// 	// When you are using localhost, you should set SameSiteDefaultMode.
+	// 	CookieSameSite: http.SameSiteDefaultMode,
+	// 	// When you are using production, you should set SameSiteNoneMode.
+	// 	// CookieSameSite: http.SameSiteNoneMode,
+	// }))
 	e.GET("/csrf", ac.CsrfToken)
 	t := e.Group("/articles")
 	t.GET("", ac.GetAllArticles)
