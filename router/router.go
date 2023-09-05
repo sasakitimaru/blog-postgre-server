@@ -5,12 +5,11 @@ import (
 	"net/http"
 	"os"
 
-	echojwt "github.com/labstack/echo-jwt/v4"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
 
-func NewRouter(uc controller.IUserController, tc controller.ITaskController) *echo.Echo {
+func NewRouter(ac controller.IArticleInterface) *echo.Echo {
 	e := echo.New()
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"http://localhost:3000", os.Getenv("FE_URL")},
@@ -23,22 +22,17 @@ func NewRouter(uc controller.IUserController, tc controller.ITaskController) *ec
 		CookiePath:     "/",
 		CookieDomain:   os.Getenv("API_DOMAIN"),
 		CookieHTTPOnly: true,
-		// CookieSameSite: http.SameSiteDefaultMode,
-		CookieSameSite: http.SameSiteNoneMode,
+		// When you are using localhost, you should set SameSiteDefaultMode.
+		CookieSameSite: http.SameSiteDefaultMode,
+		// When you are using production, you should set SameSiteNoneMode.
+		// CookieSameSite: http.SameSiteNoneMode,
 	}))
-	e.POST("/signup", uc.SignUp)
-	e.POST("/login", uc.LogIn)
-	e.POST("/logout", uc.LogOut)
-	e.GET("/csrf", uc.CsrfToken)
-	t := e.Group("/tasks")
-	t.Use(echojwt.WithConfig(echojwt.Config{
-		SigningKey:  []byte(os.Getenv("SECRET")),
-		TokenLookup: "cookie:token",
-	}))
-	t.GET("", tc.GetAllTasks)
-	t.GET("/:taskId", tc.GetAllTasksById)
-	t.POST("", tc.CreateTask)
-	t.PUT("/:taskId", tc.UpdateTask)
-	t.DELETE("/:taskId", tc.DeleteTask)
+	e.GET("/csrf", ac.CsrfToken)
+	t := e.Group("/articles")
+	t.GET("", ac.GetAllArticles)
+	t.GET("/:articleId", ac.GetAllArticlesById)
+	t.POST("", ac.CreateArticle)
+	t.PUT("/:articleId", ac.UpdateArticle)
+	t.DELETE("/:articleId", ac.DeleteArticle)
 	return e
 }

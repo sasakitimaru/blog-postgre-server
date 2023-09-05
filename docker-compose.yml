@@ -5,16 +5,12 @@ services:
     ports:
       - 5434:5432
     environment:
-      POSTGRES_USER: udemy
-      POSTGRES_PASSWORD: udemy
-      POSTGRES_DB: udemy
+      POSTGRES_USER: sasakitimaru
+      POSTGRES_PASSWORD: sasaTa26
+      POSTGRES_DB: sasakitiBlog
     restart: always
     networks:
       - lesson
-    volumes:
-      - type: volume
-        source: udemy-postgres-data
-        target: /var/lib/postgresql/data
 networks:
   lesson:
 

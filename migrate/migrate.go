@@ -10,7 +10,7 @@ func main() {
 	dbConn := db.NewDB()
 	defer db.CloseDB(dbConn)
 	defer fmt.Println("Successfully Migrated")
-	if err := dbConn.AutoMigrate(&model.User{}, &model.Task{}); err != nil {
+	if err := dbConn.AutoMigrate(&model.Article{}); err != nil {
 		fmt.Println("Error Migrating")
 	}
 }
