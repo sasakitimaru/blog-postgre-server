@@ -31,7 +31,7 @@ func (ar *articleRepository) GetAllArticles(articles *[]model.Article) error {
 }
 
 func (ar *articleRepository) GetArticleByID(article *model.Article, articleId uint) error {
-	if err := ar.db.Where("id = ?", articleId).First(article, articleId).Error; err != nil {
+	if err := ar.db.Where("id = ?", articleId).First(article).Error; err != nil {
 		return err
 	}
 	return nil

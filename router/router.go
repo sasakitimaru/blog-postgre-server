@@ -8,7 +8,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 )
 
-func NewRouter(ac controller.IArticleInterface) *echo.Echo {
+func NewRouter(ac controller.IArticleInterface, cc controller.ICommentController, rc controller.IReplyController) *echo.Echo {
 	e := echo.New()
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"http://localhost:3000", os.Getenv("FE_URL")},
@@ -33,5 +33,21 @@ func NewRouter(ac controller.IArticleInterface) *echo.Echo {
 	t.POST("", ac.CreateArticle)
 	t.PUT("/:articleId", ac.UpdateArticle)
 	t.DELETE("/:articleId", ac.DeleteArticle)
+
+	c := e.Group("/comments")
+	c.GET("", cc.GetAllComments)
+	c.GET("/:commentId", cc.GetAllCommentsById)
+	c.GET("/article/:articleId", cc.GetCommentsByArticleID)
+	c.POST("", cc.CreateComment)
+	c.PUT("/:commentId", cc.UpdateComment)
+	c.DELETE("/:commentId", cc.DeleteComment)
+
+	r := e.Group("/replies")
+	r.GET("", rc.GetAllReplies)
+	r.GET("/:replyId", rc.GetAllRepliesById)
+	r.GET("/comment/:commentId", rc.GetRepliesByCommentID)
+	r.POST("", rc.CreateReply)
+	r.PUT("/:replyId", rc.UpdateReply)
+	r.DELETE("/:replyId", rc.DeleteReply)
 	return e
 }
