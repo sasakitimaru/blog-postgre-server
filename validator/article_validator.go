@@ -17,6 +17,6 @@ func NewArticleValidator() IArticleValidator {
 }
 func (av *articleValidator) ArticleValidate(article model.Article) error {
 	return validation.ValidateStruct(&article,
-		validation.Field(&article.Title, validation.Required.Error("title is required"), validation.Length(5, 40).Error("limited min 10 to max 40 characters")),
+		validation.Field(&article.Title, validation.Required.Error("title is required"), validation.Length(5, 100).Error("limited min 5 to max 100 characters")),
 	)
 }
